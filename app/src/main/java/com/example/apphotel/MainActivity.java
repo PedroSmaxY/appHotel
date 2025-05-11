@@ -8,10 +8,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
+import android.content.Intent;
+import android.widget.Button;
+
 
 import com.example.apphotel.adapters.ImagePagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    Button btnReserve;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +39,13 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         ImagePagerAdapter adapter = new ImagePagerAdapter(images);
         viewPager.setAdapter(adapter);
+
+        btnReserve = findViewById(R.id.btnReserve);
+
+        btnReserve.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ReservationActivity.class);
+            startActivity(intent);
+        });
+
     }
 }
