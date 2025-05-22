@@ -34,14 +34,31 @@ public class ReservationActivity extends AppCompatActivity {
         txtSaida = findViewById(R.id.txtSaida);
         Button btnConfirmar = findViewById(R.id.btnConfirmar);
 
-        txtEntrada.setOnClickListener(v -> showDatePicker(dataEntrada, txtEntrada));
-        txtSaida.setOnClickListener(v -> showDatePicker(dataSaida, txtSaida));
+        txtEntrada.setOnClickListener(v -> showDatePicker(dataEntrada, txtEntrada, true));
+        txtSaida.setOnClickListener(v -> showDatePicker(dataSaida, txtSaida, false));
 
         btnConfirmar.setOnClickListener(v -> {
             int idSelecionado = radioGroup.getCheckedRadioButtonId();
 
             if (idSelecionado == -1) {
                 Toast.makeText(this, "Selecione uma suíte!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Calendar hoje = Calendar.getInstance();
+            hoje.set(Calendar.HOUR_OF_DAY, 0);
+            hoje.set(Calendar.MINUTE, 0);
+            hoje.set(Calendar.SECOND, 0);
+            hoje.set(Calendar.MILLISECOND, 0);
+
+            Calendar dataEntradaSelecionada = (Calendar) dataEntrada.clone();
+            dataEntradaSelecionada.set(Calendar.HOUR_OF_DAY, 0);
+            dataEntradaSelecionada.set(Calendar.MINUTE, 0);
+            dataEntradaSelecionada.set(Calendar.SECOND, 0);
+            dataEntradaSelecionada.set(Calendar.MILLISECOND, 0);
+
+            if (dataEntradaSelecionada.before(hoje)) {
+                Toast.makeText(this, "Data de entrada não pode ser anterior a hoje!", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -57,21 +74,20 @@ public class ReservationActivity extends AppCompatActivity {
             String suiteNome;
             if (idSelecionado == R.id.suite1) {
                 preco = 850;
-                suiteNome = "Suíte Diamante Vista Mar";
+                suiteNome = "Suíte Imperial Atlântica (Cobertura - Vista Mar)";
             } else if (idSelecionado == R.id.suite2) {
                 preco = 650;
-                suiteNome = "Suíte Topázio Vista Mar";
+                suiteNome = "Suíte Horizonte Azul (Luxo - Vista Mar)";
             } else if (idSelecionado == R.id.suite3) {
                 preco = 700;
-                suiteNome = "Suíte Safira Vista Cidade";
-            } else {
+                suiteNome = "Suíte Cidade Maravilhosa (Cobertura - Vista Cidade)";
+            } else { // Assume-se R.id.suite4
                 preco = 500;
-                suiteNome = "Suíte Rubi Vista Cidade";
+                suiteNome = "Suíte Jardim Carioca (Conforto - Vista Cidade)";
             }
 
             double total = preco * dias;
 
-            // Criar Intent e passar dados
             Intent intent = new Intent(ReservationActivity.this, ResponseActivity.class);
             intent.putExtra("nome", nome.getText().toString() + " " + sobrenome.getText().toString());
             intent.putExtra("cpf", cpf.getText().toString());
@@ -87,10 +103,21 @@ public class ReservationActivity extends AppCompatActivity {
         });
     }
 
-    private void showDatePicker(Calendar calendar, TextView textView) {
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+    private void showDatePicker(Calendar calendar, TextView textView, boolean isEntrada) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(year, month, dayOfMonth);
             textView.setText(sdf.format(calendar.getTime()));
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        if (isEntrada) {
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        } else {
+            if (dataEntrada.getTimeInMillis() > System.currentTimeMillis() - 1000) {
+                datePickerDialog.getDatePicker().setMinDate(dataEntrada.getTimeInMillis() + (24 * 60 * 60 * 1000));
+            } else {
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + (24 * 60 * 60 * 1000) - 1000);
+            }
+        }
+        datePickerDialog.show();
     }
 }
