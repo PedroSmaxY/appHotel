@@ -1,10 +1,14 @@
 package com.example.apphotel;
 
+import static com.example.apphotel.R.layout.activity_reservation;
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -18,7 +22,7 @@ public class ReservationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reservation);
+        setContentView(activity_reservation);
 
         RadioGroup radioGroup = findViewById(R.id.radioGroupSuites);
         EditText nome = findViewById(R.id.inputNome);
@@ -83,7 +87,7 @@ public class ReservationActivity extends AppCompatActivity {
         });
     }
 
-        private void showDatePicker(Calendar calendar, TextView textView) {
+    private void showDatePicker(Calendar calendar, TextView textView) {
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(year, month, dayOfMonth);
             textView.setText(sdf.format(calendar.getTime()));
