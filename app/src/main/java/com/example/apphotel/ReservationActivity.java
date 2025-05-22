@@ -1,6 +1,7 @@
 package com.example.apphotel;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,6 @@ public class ReservationActivity extends AppCompatActivity {
         EditText email = findViewById(R.id.inputEmail);
         EditText cpf = findViewById(R.id.inputCpf);
         EditText telefone = findViewById(R.id.inputTelefone);
-        EditText endereco = findViewById(R.id.inputEndereco);
         txtEntrada = findViewById(R.id.txtEntrada);
         txtSaida = findViewById(R.id.txtSaida);
         Button btnConfirmar = findViewById(R.id.btnConfirmar);
@@ -50,25 +50,40 @@ public class ReservationActivity extends AppCompatActivity {
             }
 
             double preco;
-            if (idSelecionado == R.id.suite1) preco = 850;
-            else if (idSelecionado == R.id.suite2) preco = 650;
-            else if (idSelecionado == R.id.suite3) preco = 700;
-            else preco = 500;
+            String suiteNome;
+            if (idSelecionado == R.id.suite1) {
+                preco = 850;
+                suiteNome = "Suíte Diamante Vista Mar";
+            } else if (idSelecionado == R.id.suite2) {
+                preco = 650;
+                suiteNome = "Suíte Topázio Vista Mar";
+            } else if (idSelecionado == R.id.suite3) {
+                preco = 700;
+                suiteNome = "Suíte Safira Vista Cidade";
+            } else {
+                preco = 500;
+                suiteNome = "Suíte Rubi Vista Cidade";
+            }
 
             double total = preco * dias;
 
-            String msg = "Reserva confirmada!\nCliente: " + nome.getText() + " " + sobrenome.getText()
-                    + "\nE-mail: " + email.getText()
-                    + "\nEntrada: " + txtEntrada.getText()
-                    + "\nSaída: " + txtSaida.getText()
-                    + "\nDiárias: " + dias
-                    + "\nValor total: R$ " + total;
+            // Criar Intent e passar dados
+            Intent intent = new Intent(ReservationActivity.this, ResponseActivity.class);
+            intent.putExtra("nome", nome.getText().toString() + " " + sobrenome.getText().toString());
+            intent.putExtra("cpf", cpf.getText().toString());
+            intent.putExtra("email", email.getText().toString());
+            intent.putExtra("telefone", telefone.getText().toString());
+            intent.putExtra("dataEntrada", txtEntrada.getText().toString());
+            intent.putExtra("dataSaida", txtSaida.getText().toString());
+            intent.putExtra("suite", suiteNome);
+            intent.putExtra("dias", dias);
+            intent.putExtra("total", total);
 
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            startActivity(intent);
         });
     }
 
-    private void showDatePicker(Calendar calendar, TextView textView) {
+        private void showDatePicker(Calendar calendar, TextView textView) {
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(year, month, dayOfMonth);
             textView.setText(sdf.format(calendar.getTime()));

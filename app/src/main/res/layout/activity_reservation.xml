@@ -11,6 +11,7 @@
         android:orientation="vertical">
 
         <!-- Título -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +57,6 @@
         <EditText android:id="@+id/inputEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="E-mail" android:inputType="textEmailAddress" />
         <EditText android:id="@+id/inputCpf" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="CPF" android:inputType="number" />
         <EditText android:id="@+id/inputTelefone" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Telefone" android:inputType="phone" />
-        <EditText android:id="@+id/inputEndereco" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Endereço" />
 
         <!-- Datas -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Data de Entrada:" android:layout_marginTop="16dp"/>

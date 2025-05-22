@@ -15,6 +15,7 @@
         <activity
             android:name=".ReservationActivity"
             />
+        <activity android:name=".ResponseActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
