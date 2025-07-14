@@ -1,123 +1,120 @@
 package com.example.apphotel;
 
-import static com.example.apphotel.R.layout.activity_reservation;
-
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.*;
-
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.util.Pair;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputEditText;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class ReservationActivity extends AppCompatActivity {
 
-    TextView txtEntrada, txtSaida;
-    Calendar dataEntrada = Calendar.getInstance();
-    Calendar dataSaida = Calendar.getInstance();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    // Views do layout
+    private ImageView selectedSuiteImage;
+    private TextView selectedSuiteName;
+    private TextInputEditText inputNome, inputEmail, inputCpf, inputTelefone, inputDatas; // CAMPOS ADICIONADOS
+    private Button btnConfirmar;
+
+    // Dados da reserva
+    private long checkInDate = 0;
+    private long checkOutDate = 0;
+    private double suitePricePerNight = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(activity_reservation);
+        setContentView(R.layout.activity_reservation);
 
-        RadioGroup radioGroup = findViewById(R.id.radioGroupSuites);
-        EditText nome = findViewById(R.id.inputNome);
-        EditText sobrenome = findViewById(R.id.inputSobrenome);
-        EditText email = findViewById(R.id.inputEmail);
-        EditText cpf = findViewById(R.id.inputCpf);
-        EditText telefone = findViewById(R.id.inputTelefone);
-        txtEntrada = findViewById(R.id.txtEntrada);
-        txtSaida = findViewById(R.id.txtSaida);
-        Button btnConfirmar = findViewById(R.id.btnConfirmar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar_reservation);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        txtEntrada.setOnClickListener(v -> showDatePicker(dataEntrada, txtEntrada, true));
-        txtSaida.setOnClickListener(v -> showDatePicker(dataSaida, txtSaida, false));
+        // Vincula as views
+        selectedSuiteImage = findViewById(R.id.selected_suite_image);
+        selectedSuiteName = findViewById(R.id.selected_suite_name);
+        inputNome = findViewById(R.id.inputNome);
+        inputDatas = findViewById(R.id.inputDatas);
+        btnConfirmar = findViewById(R.id.btnConfirmar);
+        // VINCULANDO NOVOS CAMPOS
+        inputEmail = findViewById(R.id.inputEmail);
+        inputCpf = findViewById(R.id.inputCpf);
+        inputTelefone = findViewById(R.id.inputTelefone);
 
-        btnConfirmar.setOnClickListener(v -> {
-            int idSelecionado = radioGroup.getCheckedRadioButtonId();
+        getSuiteDataFromIntent();
+        setupDatePicker();
 
-            if (idSelecionado == -1) {
-                Toast.makeText(this, "Selecione uma suíte!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Calendar hoje = Calendar.getInstance();
-            hoje.set(Calendar.HOUR_OF_DAY, 0);
-            hoje.set(Calendar.MINUTE, 0);
-            hoje.set(Calendar.SECOND, 0);
-            hoje.set(Calendar.MILLISECOND, 0);
-
-            Calendar dataEntradaSelecionada = (Calendar) dataEntrada.clone();
-            dataEntradaSelecionada.set(Calendar.HOUR_OF_DAY, 0);
-            dataEntradaSelecionada.set(Calendar.MINUTE, 0);
-            dataEntradaSelecionada.set(Calendar.SECOND, 0);
-            dataEntradaSelecionada.set(Calendar.MILLISECOND, 0);
-
-            if (dataEntradaSelecionada.before(hoje)) {
-                Toast.makeText(this, "Data de entrada não pode ser anterior a hoje!", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            long diff = dataSaida.getTimeInMillis() - dataEntrada.getTimeInMillis();
-            long dias = diff / (1000 * 60 * 60 * 24);
-
-            if (dias <= 0) {
-                Toast.makeText(this, "Data de saída deve ser após a entrada!", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            double preco;
-            String suiteNome;
-            if (idSelecionado == R.id.suite1) {
-                preco = 850;
-                suiteNome = "Suíte Imperial Atlântica (Cobertura - Vista Mar)";
-            } else if (idSelecionado == R.id.suite2) {
-                preco = 650;
-                suiteNome = "Suíte Horizonte Azul (Luxo - Vista Mar)";
-            } else if (idSelecionado == R.id.suite3) {
-                preco = 700;
-                suiteNome = "Suíte Cidade Maravilhosa (Cobertura - Vista Cidade)";
-            } else { // Assume-se R.id.suite4
-                preco = 500;
-                suiteNome = "Suíte Jardim Carioca (Conforto - Vista Cidade)";
-            }
-
-            double total = preco * dias;
-
-            Intent intent = new Intent(ReservationActivity.this, ResponseActivity.class);
-            intent.putExtra("nome", nome.getText().toString() + " " + sobrenome.getText().toString());
-            intent.putExtra("cpf", cpf.getText().toString());
-            intent.putExtra("email", email.getText().toString());
-            intent.putExtra("telefone", telefone.getText().toString());
-            intent.putExtra("dataEntrada", txtEntrada.getText().toString());
-            intent.putExtra("dataSaida", txtSaida.getText().toString());
-            intent.putExtra("suite", suiteNome);
-            intent.putExtra("dias", dias);
-            intent.putExtra("total", total);
-
-            startActivity(intent);
-        });
+        btnConfirmar.setOnClickListener(v -> processReservation());
     }
 
-    private void showDatePicker(Calendar calendar, TextView textView, boolean isEntrada) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            calendar.set(year, month, dayOfMonth);
-            textView.setText(sdf.format(calendar.getTime()));
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+    private void getSuiteDataFromIntent() {
+        Intent intent = getIntent();
+        String suiteName = intent.getStringExtra("SUITE_NAME");
+        suitePricePerNight = intent.getDoubleExtra("SUITE_PRICE_RAW", 0.0);
+        int imageRes = intent.getIntExtra("SUITE_IMAGE", R.drawable.logoapp);
 
-        if (isEntrada) {
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        } else {
-            if (dataEntrada.getTimeInMillis() > System.currentTimeMillis() - 1000) {
-                datePickerDialog.getDatePicker().setMinDate(dataEntrada.getTimeInMillis() + (24 * 60 * 60 * 1000));
-            } else {
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + (24 * 60 * 60 * 1000) - 1000);
-            }
+        selectedSuiteName.setText(suiteName);
+        selectedSuiteImage.setImageResource(imageRes);
+    }
+
+    private void setupDatePicker() {
+        MaterialDatePicker<Pair<Long, Long>> datePicker = MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText("Selecione o período")
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            checkInDate = selection.first;
+            checkOutDate = selection.second;
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            String dateString = sdf.format(new Date(checkInDate)) + " - " + sdf.format(new Date(checkOutDate));
+            inputDatas.setText(dateString);
+        });
+
+        inputDatas.setOnClickListener(v -> datePicker.show(getSupportFragmentManager(), "DATE_PICKER"));
+    }
+
+    private void processReservation() {
+        // COLETA DE DADOS DE TODOS OS CAMPOS
+        String nome = inputNome.getText().toString().trim();
+        String email = inputEmail.getText().toString().trim();
+        String cpf = inputCpf.getText().toString().trim();
+        String telefone = inputTelefone.getText().toString().trim();
+
+        // Validação completa
+        if (nome.isEmpty() || email.isEmpty() || cpf.isEmpty() || telefone.isEmpty() || checkInDate == 0) {
+            Toast.makeText(this, "Preencha todos os campos e selecione as datas!", Toast.LENGTH_SHORT).show();
+            return;
         }
-        datePickerDialog.show();
+
+        long diffInMillis = Math.abs(checkOutDate - checkInDate);
+        long nights = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+
+        if (nights <= 0) {
+            Toast.makeText(this, "A data de saída deve ser após a de entrada.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double totalPrice = nights * suitePricePerNight;
+
+        // ENVIANDO TODOS OS DADOS PARA A PRÓXIMA TELA
+        Intent intent = new Intent(ReservationActivity.this, PaymentActivity.class);
+        intent.putExtra("nome", nome);
+        intent.putExtra("email", email);
+        intent.putExtra("cpf", cpf);
+        intent.putExtra("telefone", telefone);
+        intent.putExtra("dataEntrada", inputDatas.getText().toString());
+        intent.putExtra("suite", selectedSuiteName.getText().toString());
+        intent.putExtra("dias", nights);
+        intent.putExtra("total", totalPrice);
+
+        startActivity(intent);
     }
 }

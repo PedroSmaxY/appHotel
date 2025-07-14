@@ -1,4 +1,9 @@
 <resources>
-    <string name="app_name">AppHotel</string>
+    <string name="app_name">Pálacio do Atlântico</string>
     <string name="image_description">Descrição da imagem</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="texto_missao">Proporcionar uma experiência de hospedagem única e memorável, combinando luxo, conforto e um atendimento excepcional que supere as expectativas de nossos hóspedes.</string>
+    <string name="texto_visao">Ser reconhecido como o principal hotel de luxo da região, referência em hospitalidade, inovação e sustentabilidade.</string>
 </resources>

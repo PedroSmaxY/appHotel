@@ -12,19 +12,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppHotel"
         tools:targetApi="31">
-        <activity
-            android:name=".ReservationActivity"
-            />
-        <activity android:name=".ResponseActivity" />
+
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name=".ReservationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ResponseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SuitesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MissaoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SobreActivity"
+            android:exported="false" />
+
+    </application>
 </manifest>

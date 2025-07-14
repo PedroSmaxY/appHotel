@@ -1,71 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF4D5"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:background="?attr/colorSurface"
+    tools:context=".ReservationActivity">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_reservation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize"
+        app:title="Confirmar Reserva"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp" />
 
-        <!-- Título -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Escolha sua suíte:"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginBottom="8dp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <!-- Suítes -->
-        <RadioGroup
-            android:id="@+id/radioGroupSuites"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/suite1"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Suíte Imperial Atlântica (Cobertura - Vista Mar)" />
+                android:text="Sua Escolha"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-            <RadioButton
-                android:id="@+id/suite2"
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/selected_suite_image"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                        tools:src="@tools:sample/backgrounds/scenic"/>
+
+                    <TextView
+                        android:id="@+id/selected_suite_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        tools:text="Suíte Imperial Atlântica" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Suíte Horizonte Azul (Luxo - Vista Mar)" />
+                android:layout_marginTop="24dp"
+                android:text="Seus Dados"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-            <RadioButton
-                android:id="@+id/suite3"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Nome Completo">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputNome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="E-mail">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="CPF">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCpf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Telefone">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputTelefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Suíte Cidade Maravilhosa (Cobertura - Vista Cidade)" />
+                android:layout_marginTop="24dp"
+                android:text="Período da Estadia"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-            <RadioButton
-                android:id="@+id/suite4"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Suíte Jardim Carioca (Conforto - Vista Cidade)" />
-        </RadioGroup>
+                android:layout_marginTop="8dp"
+                app:endIconDrawable="@drawable/calendar"
+                app:endIconMode="custom"
+                android:hint="Check-in e Check-out">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputDatas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Campos do cliente -->
-        <EditText android:id="@+id/inputNome" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Nome" />
-        <EditText android:id="@+id/inputSobrenome" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Sobrenome" />
-        <EditText android:id="@+id/inputEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="E-mail" android:inputType="textEmailAddress" />
-        <EditText android:id="@+id/inputCpf" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="CPF" android:inputType="number" />
-        <EditText android:id="@+id/inputTelefone" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Telefone" android:inputType="phone" />
-
-        <!-- Datas -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Data de Entrada:" android:layout_marginTop="16dp"/>
-        <TextView android:id="@+id/txtEntrada" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp" android:background="#EEEEEE" android:text="Clique para selecionar" />
-
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Data de Saída:" android:layout_marginTop="16dp"/>
-        <TextView android:id="@+id/txtSaida" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp" android:background="#EEEEEE" android:text="Clique para selecionar" />
-
-        <!-- Botão -->
-        <Button android:id="@+id/btnConfirmar" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Confirmar Reserva" android:layout_marginTop="24dp" />
-    </LinearLayout>
-</ScrollView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ir para o Pagamento"
+                android:layout_marginTop="32dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
